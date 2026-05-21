@@ -2,6 +2,10 @@ import numpy as np
 
 class Network:
     def __init__(self, layers: np.ndarray):
+        if type(layers) != np.ndarray: 
+            raise TypeError("layers expected <np.ndarray>" 
+                        f", got {type(layers)}")
+    
         self.layers = np.array(int)
         self.size = len(layers)
         self.weights = [0] * self.size
