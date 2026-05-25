@@ -121,3 +121,32 @@ class TestBackProp:
         assert np.allclose(grad_w[1], grad_w_torch[1])
         assert np.allclose(grad_b[0], grad_b_torch[0].reshape(-1,1))
         assert np.allclose(grad_b[1], grad_b_torch[1].reshape(-1,1))
+
+    def test_output_big(self):
+        """Test accuracy of backprop method
+            for a bigger network"""
+
+        layers = np.array([20,50,40,30,20,10])
+        nw = Network(layers)
+        X = np.random.rand(20,)
+
+        nw.weights = [np.random.rand(layers[i+1],layers[i]) for i in range(nw.size - 1)]
+        nw.biases = [np.random.rand(layers[i],) for i in range(1, nw.size)]
+
+        Y = np.random.rand(10,)
+
+        # compute grad_w and grad_b using our function
+        (grad_w, grad_b) = nw.backprop(X,Y)
+
+        # test against grad_w and grad_b 
+        # computed using pytorch
+        (grad_w_torch,grad_b_torch) = backprop_torch(X, Y, nw)
+
+        assert len(nw.weights) == len(grad_w)
+        assert len(nw.biases) == len(grad_b)
+
+        for i in range(nw.size - 1):
+            assert np.shape(nw.weights[i]) == (layers[i+1],layers[i])
+            assert np.shape(nw.biases[i]) == (layers[i+1],)
+            assert np.allclose(grad_w[i], grad_w_torch[i])
+            assert np.allclose(grad_b[i], grad_b_torch[i].reshape(-1,1))
