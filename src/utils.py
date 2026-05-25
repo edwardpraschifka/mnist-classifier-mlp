@@ -25,7 +25,7 @@ def sigmoid(z: int):
 
     return 1/(1+np.exp(-z))
 
-def make_batches(X: np.ndarray, batch_size: int):
+def shuffle_and_batch(X: np.ndarray, batch_size: int):
     """Splits data into batches, returns list of batches"""
 
     np.random.shuffle(X)
