@@ -1,9 +1,13 @@
 import pytest
 import numpy as np
+import torch
 
 from src.network import Network
+from src.utils import cost
+from tests.utils import backprop_torch
 
 class TestConstructor:
+    
     def test_network_dims(self):
         """Create a network and check the dimensions of its weight and bias arrays"""
 
@@ -77,3 +81,44 @@ class TestFeedForward:
         assert np.array_equal(np.round(A[1],3), [0.547, 0.582, 0.490, 0.591])
         assert np.array_equal(np.round(Z[2],3), [0.484, 0.629])
         assert np.array_equal(np.round(A[2],3), [0.619, 0.652])
+
+
+class TestBackProp:
+
+    def test_output(self):
+        """Test accuracy of backprop method"""
+
+        layers = np.array([3,4,2])
+        nw = Network(layers)
+        X = np.array([0.1, 0.1, 0.2]).reshape((3,))
+
+        nw.weights[0] = np.array([[0.1, 0.2, 0.3], [0.5, 0.4, 0.2], 
+                               [0.1, 0.1, 0.2], [0.3, 0.2 , 0.1]])
+        nw.weights[1] = np.array([[0.2, 0.1, 0.2, 0.2], [0.3, 0.1, 0.3, 0.1]])
+
+        
+        nw.biases[0] = np.array([0.1, 0.2, -0.1, 0.3])
+        nw.biases[1] = np.array([0.1, 0.2])
+
+        Y = np.array([1, 0]).reshape((2,))
+
+        # compute grad_w and grad_b using our function
+        (grad_w, grad_b) = nw.backprop(X,Y)
+
+        # test against grad_w and grad_b 
+        # computed using pytorch
+        (grad_w_torch,grad_b_torch) = backprop_torch(X, Y, nw)
+
+        assert len(nw.weights) == len(grad_w)
+        assert len(nw.biases) == len(grad_b)
+
+        assert np.shape(nw.weights[0]) == (4,3)
+        assert np.shape(nw.weights[1]) == (2,4)
+        
+        assert np.shape(nw.biases[0]) == (4,)
+        assert np.shape(nw.biases[1]) == (2,)
+
+        assert np.allclose(grad_w[0], grad_w_torch[0])
+        assert np.allclose(grad_w[1], grad_w_torch[1])
+        assert np.allclose(grad_b[0], grad_b_torch[0].reshape(-1,1))
+        assert np.allclose(grad_b[1], grad_b_torch[1].reshape(-1,1))
