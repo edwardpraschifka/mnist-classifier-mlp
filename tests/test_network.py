@@ -7,7 +7,7 @@ from src.utils import cost
 from tests.utils import backprop_torch
 
 class TestConstructor:
-    
+
     def test_network_dims(self):
         """Create a network and check the dimensions of its weight and bias arrays"""
 
@@ -92,13 +92,12 @@ class TestBackProp:
         nw = Network(layers)
         X = np.array([0.1, 0.1, 0.2]).reshape((3,))
 
-        nw.weights[0] = np.array([[0.1, 0.2, 0.3], [0.5, 0.4, 0.2], 
-                               [0.1, 0.1, 0.2], [0.3, 0.2 , 0.1]])
-        nw.weights[1] = np.array([[0.2, 0.1, 0.2, 0.2], [0.3, 0.1, 0.3, 0.1]])
+        nw.weights[0] = np.random.randn(4,3)
+        nw.weights[1] = np.random.randn(2,4)
 
         
-        nw.biases[0] = np.array([0.1, 0.2, -0.1, 0.3])
-        nw.biases[1] = np.array([0.1, 0.2])
+        nw.biases[0] = np.random.randn(4,)
+        nw.biases[1] = np.random.randn(2,)
 
         Y = np.array([1, 0]).reshape((2,))
 
