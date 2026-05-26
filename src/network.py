@@ -1,6 +1,6 @@
 import numpy as np
 
-from .utils import cost, sigmoid
+from .utils import cost, sigmoid, shuffle_and_batch
 
 class Network:
     def __init__(self, layers: np.ndarray):
@@ -42,6 +42,43 @@ class Network:
 
 
         return (Z,A)
+    
+    def average_loss(self, X: np.ndarray, Y: np.ndarray):
+        """Takes a set of training examples, and returns
+        the network's average loss across the set"""
+
+        if np.ndim(X) != 2:
+             raise ValueError("Expected X to be a 2D array, "
+                              f"but got shape {np.shape(X)}")
+        
+        if np.ndim(Y) != 2:
+             raise ValueError("Expected Y to be a 2D array, "
+                              f"but got shape {np.shape(Y)}")
+             
+
+        if np.shape(X)[0] != np.shape(Y)[0]: 
+            raise ValueError("Shape mismatch: X has "
+                            f"{np.shape(X)[0]} rows, "
+                            f"but Y has {np.shape(Y)[0]} rows")
+        
+        if np.shape(X)[1] != self.layers[0]:
+                raise ValueError("Expected X to have shape"
+                                f" ({np.shape(X)[0]}, {self.layers[0]}), "
+                                f"but got shape {np.shape(X)}")
+            
+        if np.shape(Y)[1] != self.layers[-1]:
+                raise ValueError("Expected Y to have shape"
+                                f" ({np.shape(Y)[0]}, {self.layers[-1]}), "
+                                f"but got shape {np.shape(Y)}")
+        
+        result = 0
+        rows = np.shape(X)[0]
+        
+        for x,y in zip(X,Y):
+            (Z,A) = self.feedforward(x.reshape(-1,1))
+            result += cost(y.reshape(-1,1), A[-1])
+        
+        return result/rows
 
 
     def backprop(self, X, Y):
