@@ -6,14 +6,15 @@ class Network:
     def __init__(self, layers: np.ndarray):
         """Creates a new network, where layer i has layers[i] nodes"""
 
-        if type(layers) != np.ndarray: 
-            raise TypeError("layers expected <np.ndarray>" 
+        if type(layers) != list: 
+            raise TypeError("layers expected <class 'list'>" 
                         f", got {type(layers)}")
     
         self.layers = layers
         self.size = len(layers)
-        
-        self.weights = [np.random.rand(layers[i+1], layers[i]) for i in range(self.size - 1)]
+
+        # size of weights and biases are both size(layers) - 1
+        self.weights = [np.random.rand(layers[i], layers[i-1]) for i in range(1, self.size)]
         self.biases = [np.random.rand(layers[i]) for i in range(1, self.size)]
 
     def feedforward(self, X: np.ndarray):

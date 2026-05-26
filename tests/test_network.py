@@ -11,7 +11,7 @@ class TestConstructor:
     def test_network_dims(self):
         """Create a network and check the dimensions of its weight and bias arrays"""
 
-        layers = np.array([3,4,2])
+        layers = [3,4,2]
         nw = Network(layers)
 
         assert nw.size == 3
@@ -30,7 +30,7 @@ class TestConstructor:
         """Create a network using a layers array of invalid type"""
 
         with pytest.raises(TypeError):
-            layers = list([])
+            layers = np.array([])
             nw = Network(layers)
 
 
@@ -39,7 +39,7 @@ class TestFeedForward:
     def test_bad_type(self):
         """Try feedforward using an input array of invalid type"""
 
-        layers = np.array([3,4,2])
+        layers = [3,4,2]
         nw = Network(layers)
         X = [1,2,3]
 
@@ -49,7 +49,7 @@ class TestFeedForward:
     def test_diff_len(self):
         """Try feedforward using an input array of invalid length"""
 
-        layers = np.array([3,4,2])
+        layers = [3,4,2]
         nw = Network(layers)
         X = np.array([1,2,3,4])
 
@@ -59,7 +59,7 @@ class TestFeedForward:
     def test_output(self):
         """Try feedforward and check accuracy of the result"""
 
-        layers = np.array([3,4,2])
+        layers = [3,4,2]
         nw = Network(layers)
         X = np.array([0.1, 0.1, 0.2]).reshape((3,))
 
@@ -88,7 +88,7 @@ class TestBackProp:
     def test_output(self):
         """Test accuracy of backprop method"""
 
-        layers = np.array([3,4,2])
+        layers = [3,4,2]
         nw = Network(layers)
         X = np.array([0.1, 0.1, 0.2]).reshape((3,))
 
@@ -126,7 +126,7 @@ class TestBackProp:
         """Test accuracy of backprop method
             for a bigger network"""
 
-        layers = np.array([20,50,40,30,20,10])
+        layers = [20,50,40,30,20,10]
         nw = Network(layers)
         X = np.random.rand(20,)
 
