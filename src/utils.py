@@ -38,7 +38,12 @@ def sigmoid(z: int):
 def shuffle_and_batch(X: np.ndarray, Y: np.ndarray, batch_size: int):
     """Splits data into batches, returns list of batches"""
 
-    (rows,cols) = np.shape(X)
+    if np.shape(X)[0] != np.shape(Y)[0]: 
+        raise ValueError("Shape mismatch: X has "
+                        f"{np.shape(X)[0]} rows, "
+                        f"but Y has {np.shape(Y)[0]} rows")
+
+    (rows,_) = np.shape(X)
     
     indices = np.random.permutation(rows)
     

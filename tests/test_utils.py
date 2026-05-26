@@ -57,6 +57,21 @@ class TestSigmoid:
         assert np.array_equal(np.round(out,2), expected_out)
 
 class TestMakeBatch:
+    def test_diff_len(self):
+        rows = 1000
+        batch_size = 25
+        x_cols = 20
+        y_cols = 5
+
+        X = np.random.rand(rows,x_cols)
+        Y = np.random.rand(rows + 1,y_cols)
+
+        with pytest.raises(ValueError):
+            (X_batches, Y_batches) = shuffle_and_batch(X, Y, batch_size)
+
+
+        
+
     def test_batch_no_remainder(self):
         rows = 1000
         batch_size = 25
