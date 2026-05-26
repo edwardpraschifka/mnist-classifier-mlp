@@ -99,7 +99,7 @@ class TestBackProp:
         nw.biases[0] = np.random.randn(4,1)
         nw.biases[1] = np.random.randn(2,1)
 
-        Y = np.array([1, 0]).reshape((2,))
+        Y = np.array([1, 0]).reshape((2,1))
 
         # compute grad_w and grad_b using our function
         (grad_w, grad_b) = nw.backprop(X,Y)
@@ -114,8 +114,8 @@ class TestBackProp:
         assert np.shape(nw.weights[0]) == (4,3)
         assert np.shape(nw.weights[1]) == (2,4)
         
-        assert np.shape(nw.biases[0]) == (4,)
-        assert np.shape(nw.biases[1]) == (2,)
+        assert np.shape(nw.biases[0]) == (4,1)
+        assert np.shape(nw.biases[1]) == (2,1)
 
         assert np.allclose(grad_w[0], grad_w_torch[0])
         assert np.allclose(grad_w[1], grad_w_torch[1])
@@ -131,9 +131,9 @@ class TestBackProp:
         X = np.random.rand(20,1)
 
         nw.weights = [np.random.rand(layers[i+1],layers[i]) for i in range(nw.size - 1)]
-        nw.biases = [np.random.rand(layers[i],) for i in range(1, nw.size)]
+        nw.biases = [np.random.rand(layers[i],1) for i in range(1, nw.size)]
 
-        Y = np.random.rand(10,)
+        Y = np.random.rand(10,1)
 
         # compute grad_w and grad_b using our function
         (grad_w, grad_b) = nw.backprop(X,Y)
@@ -147,6 +147,6 @@ class TestBackProp:
 
         for i in range(nw.size - 1):
             assert np.shape(nw.weights[i]) == (layers[i+1],layers[i])
-            assert np.shape(nw.biases[i]) == (layers[i+1],)
+            assert np.shape(nw.biases[i]) == (layers[i+1],1)
             assert np.allclose(grad_w[i], grad_w_torch[i])
             assert np.allclose(grad_b[i], grad_b_torch[i].reshape(-1,1))

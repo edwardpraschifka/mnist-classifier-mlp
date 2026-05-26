@@ -62,9 +62,9 @@ class Network:
                                 f" ({self.layers[0]}, 1), but "
                                 f"got shape {np.shape(X)}")
             
-            if np.shape(Y) != (self.layers[-1],):
+            if np.shape(Y) != (self.layers[-1],1):
                 raise ValueError("Expected Y to have shape"
-                                f" ({self.layers[-1]}, ), but "
+                                f" ({self.layers[-1]}, 1), but "
                                 f"got shape {np.shape(Y)}")
             
             grad_w = self.weights.copy()
@@ -75,7 +75,6 @@ class Network:
             # derivative of cost function with respect
             # to activations of output layer
             dcda = 2 * (A[-1] - Y)
-
 
             for i in range(self.size - 1, 0, -1):
                 # c = cost function
@@ -101,6 +100,6 @@ class Network:
                 dzda0 = self.weights[i-1]
 
                 # update dcda for next layer
-                dcda = dcdz.T @ dzda0
+                dcda = dzda0.T @ dcdz 
             
             return (grad_w, grad_b)
