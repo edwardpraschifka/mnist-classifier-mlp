@@ -44,10 +44,10 @@ class TestFeedForward:
         nw = Network(layers)
 
         # 1000 training examples
-        X = np.random.randn(1000,20)
-        torch_output = feedforward_torch(X.T, nw)
+        X = np.random.randn(20,1000)
+        torch_output = feedforward_torch(X, nw)
 
-        (Z,my_output) = nw.feedforward(X.T)
+        (Z,my_output) = nw.feedforward(X)
         
         assert np.allclose(torch_output, my_output[-1])
 
