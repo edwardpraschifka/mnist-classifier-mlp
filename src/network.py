@@ -64,22 +64,6 @@ class Network:
             A[i] = sigmoid(Z[i])
         
         return (Z,A)
-
-
-    def average_loss(self, X: np.ndarray, Y: np.ndarray):
-        """Takes a set of training examples, and returns
-        the network's average loss across the set"""
-
-        self._validate_inputs(X)
-        
-        result = 0
-        rows = np.shape(X)[0]
-        
-        for x,y in zip(X,Y):
-            (Z,A) = self.feedforward(x.reshape(-1,1))
-            result += cost(y.reshape(-1,1), A[-1])
-        
-        return result/rows
     
 
     def backprop(self, X: np.ndarray, Y: np.ndarray):

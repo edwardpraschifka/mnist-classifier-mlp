@@ -51,63 +51,6 @@ class TestFeedForward:
         
         assert np.allclose(torch_output, my_output[-1])
 
-        
-
-
-
-class TestAverageLoss:
-    def test_diff_len(self):
-        """Case where X and Y have a different
-        number of training examples"""
-
-        layers = [3,4,2]
-        nw = Network(layers)
-        X = np.random.randn(100,3)
-        Y = np.random.randn(99,2)
-
-        with pytest.raises(ValueError):
-            avg_loss = nw.average_loss(X,Y)
-
-
-    def test_x_shape(self):
-        """Case where number of rows in X
-        differs from size of input layer"""
-
-        layers = [3,4,2]
-        nw = Network(layers)
-        X = np.random.randn(100,7)
-        Y = np.random.randn(100,2)
-
-        with pytest.raises(ValueError):
-            avg_loss = nw.average_loss(X,Y)
-
-
-    def test_y_shape(self):
-        """Case where number of rows in Y
-        differs from size of output layer"""
-
-        layers = [3,4,2]
-        nw = Network(layers)
-        X = np.random.randn(100,3)
-        Y = np.random.randn(100,4)
-
-        with pytest.raises(ValueError):
-            avg_loss = nw.average_loss(X,Y)
-    
-
-    def test_output(self):
-        """Test accuracy of output"""
-
-        layers = [3,4,2]
-        nw = Network(layers)
-        X = np.random.randn(100,3)
-        Y = np.random.randn(100,2)
-
-        torch_loss = average_loss_torch(X,Y, nw)
-        my_loss = nw.average_loss(X,Y)
-
-        assert np.isclose(torch_loss, my_loss, atol=1e-5)
-
 
 class TestBackProp:
 
