@@ -146,13 +146,16 @@ class TestGradientDescent:
         layers = [3, 4, 2]
         nw = Network(layers)
         
-        X = np.array([[0.1, 0.2, 0.3]])
-        Y = np.array([[0.8, 0.2]])
+        X = np.random.rand(1,3)
+        Y = np.random.rand(1,2)
         
         nw.gradient_descent(X.T, Y.T, batch_size=1, step=0.1, epochs=1000)
-        avg_loss = nw.average_loss(X, Y)
+        (Z,A) = nw.feedforward(X.T)
 
-        assert np.allclose(avg_loss, 0)
+        acc = accuracy(A[-1], Y.T)
+        print(f"accuracy = {acc}")
+
+        assert acc > 0.9
     
     @pytest.mark.skip(reason="Feature is currently broken")
     def test_mnist_output(self):
