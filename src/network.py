@@ -17,34 +17,8 @@ class Network:
         self.weights = [np.random.rand(layers[i], layers[i-1]) for i in range(1, self.size)]
         self.biases = [np.random.rand(layers[i],1) for i in range(1, self.size)]
 
-    def feedforward(self, X: np.ndarray):
-        """Feeds a single training example
-        into the network, returns corresponding Y"""
-
-        if type(X) != np.ndarray: 
-            raise TypeError("X expected <np.ndarray>" 
-                        f", got {type(X)}")
-        
-        # check that the shape of X matches
-        # the number of nodes in the input layer
-        if np.shape(X) != (self.layers[0],1):
-            raise ValueError("Expected X to have shape"
-                             f" ({self.layers[0]}, 1), but "
-                             f"got shape {np.shape(X)}")
-        
-        Z = [None] * (self.size)
-        A = [None] * self.size
-        Z[0] = X
-        A[0] = X
-
-        for i in range(1, self.size):
-            Z[i] = (self.weights[i-1] @ A[i-1]) + self.biases[i-1]
-            A[i] = sigmoid(Z[i])
-
-
-        return (Z,A)
     
-    def feedforward_vec(self, X: np.ndarray):
+    def feedforward(self, X: np.ndarray):
         """Feeds a matrix X whose columns are training
         examples into the network, returns corresponding Y
         whose columns are the predicted values"""
@@ -102,70 +76,9 @@ class Network:
             result += cost(y.reshape(-1,1), A[-1])
         
         return result/rows
-
-
-    def backprop(self, X: np.ndarray, Y: np.ndarray):
-            """Returns partial derivatives of cost function
-                with respect to all weights and biases for a
-                given training example"""
-            
-            if type(X) != np.ndarray:
-                raise TypeError("X expected <np.ndarray>" 
-                            f", got {type(X)}")
-            
-            if type(Y) != np.ndarray:
-                raise TypeError("X expected <np.ndarray>" 
-                            f", got {type(Y)}")
-
-            if np.shape(X) != (self.layers[0],1):
-                raise ValueError("Expected X to have shape"
-                                f" ({self.layers[0]}, 1), but "
-                                f"got shape {np.shape(X)}")
-            
-            if np.shape(Y) != (self.layers[-1],1):
-                raise ValueError("Expected Y to have shape"
-                                f" ({self.layers[-1]}, 1), but "
-                                f"got shape {np.shape(Y)}")
-            
-            grad_w = self.weights.copy()
-            grad_b = self.biases.copy()
-
-            (Z, A) = self.feedforward(X)
-
-            # derivative of cost function with respect
-            # to activations of output layer
-            dcda = 2 * (A[-1] - Y)
-
-            for i in range(self.size - 1, 0, -1):
-                # c = cost function
-                # a = activation value vector for current layer
-                # z = pre-activation value vector for current layer
-                # w = weight vector for current layer
-                # b = bias vector for current layer.
-                # a0 = activation value vector for next layer
-                
-                dadz = sigmoid(Z[i]) * (1 - sigmoid(Z[i]))
-                dcdz = (dcda * dadz).reshape(-1,1)
-
-                dzdw = A[i-1].reshape(-1,1)
-                dzdb = 1
-              
-                
-                dcdw = dcdz @ dzdw.T
-                dcdb = dcdz * dzdb
-
-                grad_w[i-1] = dcdw
-                grad_b[i-1] = dcdb
-
-                dzda0 = self.weights[i-1]
-
-                # update dcda for next layer
-                dcda = dzda0.T @ dcdz 
-            
-            return (grad_w, grad_b)
     
 
-    def backprop_vec(self, X: np.ndarray, Y: np.ndarray):
+    def backprop(self, X: np.ndarray, Y: np.ndarray):
             """Returns partial derivatives of cost function
                 with respect to all weights and biases for matrices
                 X and Y, whose columns are training examples"""
@@ -187,7 +100,7 @@ class Network:
             grad_w = self.weights.copy()
             grad_b = self.biases.copy()
 
-            (Z, A) = self.feedforward_vec(X)        
+            (Z, A) = self.feedforward(X)        
 
             # derivative of cost function with respect
             # to activations of output layer
@@ -219,8 +132,8 @@ class Network:
                 dcda = dzda0.T @ dcdz 
             
             return (grad_w, grad_b)
-    
 
+            
     def gradient_descent(self, X: np.ndarray, Y: np.ndarray, batch_size=32, 
                          step=0.1, epochs=10, display=False):
         """Performs gradient descent, modifying self.weights
@@ -237,39 +150,8 @@ class Network:
                 avg_grad_w = [np.zeros(np.shape(self.weights[i])) for i in range(self.size - 1)]
                 avg_grad_b = [np.zeros(np.shape(self.biases[i])) for i in range(self.size - 1)]
 
-                # for each training example in our batch,
                 # run forward pass & backprop
-                for i in range(np.shape(xb)[0]):
-    
-                    (grad_w, grad_b) = self.backprop(xb[i].reshape(-1,1), yb[i].reshape(-1,1))
-
-                    for i in range(self.size - 1):
-                        avg_grad_w[i] += grad_w[i]/batch_size
-                        avg_grad_b[i] += grad_b[i]/batch_size
-                
-                for i in range(self.size - 1):
-                    self.weights[i] -= step * avg_grad_w[i]
-                    self.biases[i] -= step * avg_grad_b[i]
-
-            
-    def gradient_descent_vec(self, X: np.ndarray, Y: np.ndarray, batch_size=32, 
-                         step=0.1, epochs=10, display=False):
-        """Performs gradient descent, modifying self.weights
-            and self.biases in-place"""
-        
-        for e in range(epochs):
-            (X_batches, Y_batches) = shuffle_and_batch(X, Y, batch_size)
-
-            for xb, yb, i in zip(X_batches, Y_batches, range(len(X_batches))):
-
-                if display==True:
-                    print(f"[epoch {e}] processed {i}/{len(X_batches)}")
-
-                avg_grad_w = [np.zeros(np.shape(self.weights[i])) for i in range(self.size - 1)]
-                avg_grad_b = [np.zeros(np.shape(self.biases[i])) for i in range(self.size - 1)]
-
-                # run forward pass & backprop
-                (grad_w, grad_b) = self.backprop_vec(xb.T, yb.T)
+                (grad_w, grad_b) = self.backprop(xb.T, yb.T)
 
                 for i in range(self.size - 1):
                     avg_grad_w[i] += grad_w[i]/len(xb)
