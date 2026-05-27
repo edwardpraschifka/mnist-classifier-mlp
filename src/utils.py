@@ -1,28 +1,6 @@
 import numpy as np
 import math
 
-def cost(y_actual: np.ndarray, y: np.ndarray):
-    """Computes the difference between two (n,1) vectors"""
-    
-    if np.shape(y_actual) != (len(y_actual),1): 
-        raise ValueError("y_actual: expected shape "
-                         f"({len(y_actual)}, 1), "
-                         f"got {np.shape(y_actual)}")
-    
-    if np.shape(y) != (len(y),1): 
-        raise ValueError(f"y: expected shape ({len(y)},1), " 
-                         "got {np.shape(y)}")
-    
-    if np.shape(y_actual) != np.shape(y):
-        raise ValueError("Shape mismatch: y_actual has "
-                         f"shape {np.shape(y_actual)}, "
-                         f"but y has shape {np.shape(y)}")
-    
-        
-    diff_sq = (y_actual - y)**2
-    return np.sum(diff_sq)
-
-
 def sigmoid(z: int):
     """Computes sigmoid smoothing function on z"""
 

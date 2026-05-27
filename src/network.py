@@ -1,6 +1,6 @@
 import numpy as np
 
-from .utils import cost, sigmoid, shuffle_and_batch
+from .utils import sigmoid, shuffle_and_batch
 
 class Network:
     def __init__(self, layers: np.ndarray):

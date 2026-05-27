@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 from src.network import Network
-from src.utils import cost, accuracy
+from src.utils import accuracy
 from tests.utils import backprop_torch, average_loss_torch, get_mnist_data, feedforward_torch
 
 class TestConstructor:

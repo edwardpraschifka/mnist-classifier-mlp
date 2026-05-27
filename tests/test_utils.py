@@ -4,36 +4,6 @@ import math
 
 from src.utils import cost, sigmoid, shuffle_and_batch
 
-class TestCostFunction:
-    def test_output_pos(self):
-        y1 = np.array([1,2,3]).reshape(-1,1)
-        y2 = np.array([4,5,6]).reshape(-1,1)
-
-        out = cost(y1,y2)
-        assert out == 27
-
-    def test_output_neg(self):
-        y1 = np.array([-1,2,-3]).reshape(-1,1)
-        y2 = np.array([4,-5,6]).reshape(-1,1)
-
-        out = cost(y1,y2)
-        assert out == 155
-    
-    def test_bad_shape(self):
-        y1 = np.array([1,2,3])
-        y2 = np.array([1,2,3])
-
-        with pytest.raises(ValueError):
-            out = cost(y1,y2)
-
-    def test_diff_len(self):
-        y1 = np.array([1,2,3]).reshape(-1,1)
-        y2 = np.array([1,2]).reshape(-1,1)
-
-        with pytest.raises(ValueError):
-            out = cost(y1,y2)
-
-
 class TestSigmoid:
     def test_output_int(self):
         z = 2
