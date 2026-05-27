@@ -4,7 +4,7 @@ import torch
 
 from src.network import Network
 from src.utils import cost, accuracy
-from tests.utils import backprop_torch, average_loss_torch, get_mnist_data
+from tests.utils import backprop_torch, average_loss_torch, get_mnist_data, feedforward_torch
 
 class TestConstructor:
 
@@ -81,6 +81,21 @@ class TestFeedForward:
         assert np.array_equal(np.round(A[1],3), np.array([0.547, 0.582, 0.490, 0.591]).reshape(4,1))
         assert np.array_equal(np.round(Z[2],3), np.array([0.484, 0.629]).reshape(2,1))
         assert np.array_equal(np.round(A[2],3), np.array([0.619, 0.652]).reshape(2,1))
+    
+    def test_vector(self):
+        layers = [20,50,40,30,20,10]
+        nw = Network(layers)
+
+        # 1000 training examples
+        X = np.random.randn(1000,20)
+        torch_output = feedforward_torch(X.T, nw)
+
+        my_output = nw.feedforward_vec(X.T)
+        
+        assert np.allclose(torch_output, my_output)
+
+        
+
 
 
 class TestAverageLoss:

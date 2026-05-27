@@ -27,6 +27,7 @@ def backprop_torch(X: np.ndarray, Y: np.ndarray, nw: Network):
 import torch
 import torch.nn as nn
 
+
 def average_loss_torch(X: np.ndarray, Y: np.ndarray, nw: Network):
     """Conducts backprop using pytorch (used for testing)"""
     
@@ -49,7 +50,9 @@ def average_loss_torch(X: np.ndarray, Y: np.ndarray, nw: Network):
 
     return (avg_loss / X.shape[0]).item()
 
+
 def get_mnist_data():
+    
         (X_train, Y_train), (X_test, Y_test) = mnist.load_data()
         X_train = X_train.reshape(-1, 784) / 255.0
         X_test = X_test.reshape(-1, 784) / 255.0
@@ -64,3 +67,20 @@ def get_mnist_data():
         Y_test = one_hot(Y_test)
 
         return (X_train, Y_train, X_test, Y_test)
+
+
+def feedforward_torch(X: np.ndarray, nw: Network):
+    """Conducts feedforward using pytorch (used for testing)"""
+    
+    X = torch.tensor(X, dtype=torch.float64)
+    
+    Ws = [torch.tensor(w, dtype=torch.float64) for w in nw.weights]
+    Bs = [torch.tensor(b, dtype=torch.float64) for b in nw.biases]
+
+    A = X
+
+    for W, B in zip(Ws, Bs):
+        Z = W @ A + B
+        A = torch.sigmoid(Z)
+    
+    return A.detach().numpy()

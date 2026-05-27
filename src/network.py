@@ -18,7 +18,8 @@ class Network:
         self.biases = [np.random.rand(layers[i],1) for i in range(1, self.size)]
 
     def feedforward(self, X: np.ndarray):
-        """Feeds X into network, returns corresponding Y"""
+        """Feeds a single training example
+        into the network, returns corresponding Y"""
 
         if type(X) != np.ndarray: 
             raise TypeError("X expected <np.ndarray>" 
@@ -42,6 +43,29 @@ class Network:
 
 
         return (Z,A)
+    
+    def feedforward_vec(self, X: np.ndarray):
+        """Feeds a matrix X whose columns are training
+        examples into the network, returns corresponding Y
+        whose columns are the predicted values"""
+
+        if type(X) != np.ndarray: 
+            raise TypeError("X expected <np.ndarray>" 
+                        f", got {type(X)}")
+
+         
+        Z = [0] * self.size
+        A = [0] * self.size
+
+        A[0] = X
+
+        for i in range(1, self.size):
+            Z[i] = (self.weights[i-1] @ A[i-1]) + self.biases[i-1]
+            A[i] = sigmoid(Z[i])
+        
+        return A[-1]
+
+
     
     def average_loss(self, X: np.ndarray, Y: np.ndarray):
         """Takes a set of training examples, and returns
