@@ -134,11 +134,11 @@ class Network:
                 avg_grad_b = [np.zeros(np.shape(self.biases[i])) for i in range(self.size - 1)]
 
                 # run forward pass & backprop
-                (grad_w, grad_b) = self.backprop(xb.T, yb.T)
+                (grad_w, grad_b) = self.backprop(xb, yb)
 
                 for i in range(self.size - 1):
-                    avg_grad_w[i] += grad_w[i]/len(xb)
-                    avg_grad_b[i] += grad_b[i]/len(xb)
+                    avg_grad_w[i] += grad_w[i]/np.shape(xb)[1]
+                    avg_grad_b[i] += grad_b[i]/np.shape(xb)[1]
                 
                 for i in range(self.size - 1):
                     self.weights[i] -= step * avg_grad_w[i]

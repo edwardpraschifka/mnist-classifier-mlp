@@ -63,43 +63,41 @@ class TestMakeBatch:
             (X_batches, Y_batches) = shuffle_and_batch(X, Y, batch_size)
 
 
-        
-
     def test_batch_no_remainder(self):
-        rows = 1000
+        cols = 1000
         batch_size = 25
-        x_cols = 20
-        y_cols = 5
+        x_rows = 20
+        y_rows = 5
 
-        X = np.random.rand(rows,x_cols)
-        Y = np.random.rand(rows,y_cols)
+        X = np.random.rand(x_rows, cols)
+        Y = np.random.rand(y_rows, cols)
 
         (X_batches,Y_batches) = shuffle_and_batch(X, Y, batch_size)
 
         for (xb, yb) in zip(X_batches,Y_batches):
-            assert np.shape(xb) == (batch_size,x_cols)
-            assert np.shape(yb) == (batch_size,y_cols)
+            assert np.shape(xb) == (x_rows, batch_size)
+            assert np.shape(yb) == (y_rows, batch_size)
 
-        assert len(X_batches) == rows/batch_size
-        assert len(Y_batches) == rows/batch_size
+        assert len(X_batches) == cols/batch_size
+        assert len(Y_batches) == cols/batch_size
 
     def test_batch_with_remainder(self):
-        rows = 1000
+        cols = 1000
         batch_size = 24
-        x_cols = 20
-        y_cols = 5
+        x_rows = 20
+        y_rows = 5
 
-        X = np.random.rand(rows,x_cols)
-        Y = np.random.rand(rows,y_cols)
+        X = np.random.rand(x_rows, cols)
+        Y = np.random.rand(y_rows, cols)
 
         (X_batches,Y_batches) = shuffle_and_batch(X, Y, batch_size)
 
         for (xb, yb) in zip(X_batches[:-1], Y_batches[:-1]):
-            assert np.shape(xb) == (batch_size,x_cols)
-            assert np.shape(yb) == (batch_size,y_cols)
+            assert np.shape(xb) == (x_rows, batch_size)
+            assert np.shape(yb) == (y_rows, batch_size)
         
-        assert np.shape(X_batches[-1]) == (rows % batch_size, x_cols)
-        assert np.shape(Y_batches[-1]) == (rows % batch_size, y_cols)
+        assert np.shape(X_batches[-1]) == (x_rows, cols % batch_size)
+        assert np.shape(Y_batches[-1]) == (y_rows, cols % batch_size)
 
-        assert len(X_batches) == math.ceil(rows/batch_size)
-        assert len(Y_batches) == math.ceil(rows/batch_size)
+        assert len(X_batches) == math.ceil(cols/batch_size)
+        assert len(Y_batches) == math.ceil(cols/batch_size)
