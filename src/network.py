@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 from .utils import sigmoid, shuffle_and_batch
 
@@ -12,6 +13,23 @@ class Network:
         # size of weights and biases are both size(layers) - 1
         self.weights = [np.random.rand(layers[i], layers[i-1]) for i in range(1, self.size)]
         self.biases = [np.random.rand(layers[i],1) for i in range(1, self.size)]
+    
+    def save(self, filename):
+        """Saves network to file"""
+
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
+
+
+    def load(self, filename: str):
+        """Loads parameters from existing network"""
+
+        with open(filename, 'rb') as f:
+            nw = pickle.load(f)
+            self.layers = nw.layers
+            self.size = nw.size
+            self.weights = nw.weights
+            self.biases = nw.biases
     
     def _validate_inputs(self, X: np.ndarray, Y = None):
         """Check X and Y inputs against size of input

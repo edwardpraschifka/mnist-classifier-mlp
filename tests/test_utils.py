@@ -1,7 +1,9 @@
 import pytest
 import numpy as np
 import math
+import os
 
+from src.network import Network
 from src.utils import sigmoid, shuffle_and_batch, accuracy
 
 class TestSigmoid:
@@ -95,3 +97,20 @@ class TestAccuracy:
 
             y_predicted[0, i: (i+1)*10] = 1
 
+
+class TestReadWrite:
+    def test_load(self):
+        layers = [3,4,2]
+        layers_2 = [2,4,3]
+
+        nw = Network(layers)
+        nw_2 = Network(layers_2)
+
+        nw.save("test_network.pkl")
+        nw_2.load("test_network.pkl")
+        os.remove("test_network.pkl")
+
+        np.array_equal(nw_2.layers, nw.layers)
+        np.array_equal(nw_2.size, nw.size)
+        np.array_equal(nw_2.weights, nw.weights)
+        np.array_equal(nw_2.biases, nw.biases)

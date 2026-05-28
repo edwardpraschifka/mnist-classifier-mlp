@@ -1,7 +1,6 @@
 import numpy as np
-
 from src.network import Network
-from src.utils import get_mnist_data
+from src.utils import get_mnist_data, save, load
 
 def train_mnist():
     """Test model performance on MNIST"""
@@ -18,5 +17,7 @@ def train_mnist():
 
     return nw
 
+
 if __name__ == "__main__":
-    train_mnist()
+    nw = train_mnist()
+    nw.save("network.pkl")
