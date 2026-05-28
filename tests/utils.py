@@ -1,8 +1,6 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from tensorflow.keras.datasets import mnist
-
 
 
 from src.network import Network
@@ -49,24 +47,6 @@ def average_loss_torch(X: np.ndarray, Y: np.ndarray, nw: Network):
         avg_loss += torch.sum((y.reshape(-1,1) - A) ** 2)
 
     return (avg_loss / X.shape[0]).item()
-
-
-def get_mnist_data():
-    
-        (X_train, Y_train), (X_test, Y_test) = mnist.load_data()
-        X_train = X_train.reshape(-1, 784) / 255.0
-        X_test = X_test.reshape(-1, 784) / 255.0
-
-        def one_hot(Y, num_classes=10):
-            n = len(Y)
-            one_hot = np.zeros((n, 10))
-            one_hot[np.arange(n), Y] = 1
-            return one_hot
-
-        Y_train = one_hot(Y_train)
-        Y_test = one_hot(Y_test)
-
-        return (X_train, Y_train, X_test, Y_test)
 
 
 def feedforward_torch(X: np.ndarray, nw: Network):

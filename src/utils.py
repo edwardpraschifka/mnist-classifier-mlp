@@ -1,6 +1,9 @@
 import numpy as np
 import math
 
+from tensorflow.keras.datasets import mnist
+
+
 def sigmoid(z: int):
     """Computes sigmoid smoothing function on z"""
 
@@ -50,3 +53,21 @@ def accuracy(y_actual: np.ndarray, y: np.ndarray):
     
     accuracy = (np.argmax(y_actual, axis=0) == np.argmax(y, axis=0)).sum() / np.shape(y_actual)[1]
     return accuracy 
+
+
+def get_mnist_data():
+    
+        (X_train, Y_train), (X_test, Y_test) = mnist.load_data()
+        X_train = X_train.reshape(-1, 784) / 255.0
+        X_test = X_test.reshape(-1, 784) / 255.0
+
+        def one_hot(Y, num_classes=10):
+            n = len(Y)
+            one_hot = np.zeros((n, 10))
+            one_hot[np.arange(n), Y] = 1
+            return one_hot
+
+        Y_train = one_hot(Y_train)
+        Y_test = one_hot(Y_test)
+
+        return (X_train, Y_train, X_test, Y_test)

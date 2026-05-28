@@ -3,8 +3,8 @@ import numpy as np
 import torch
 
 from src.network import Network
-from src.utils import accuracy
-from tests.utils import backprop_torch, average_loss_torch, get_mnist_data, feedforward_torch
+from src.utils import accuracy, get_mnist_data
+from tests.utils import backprop_torch, feedforward_torch
 
 class TestConstructor:
 
@@ -96,7 +96,6 @@ class TestGradientDescent:
         (Z,A) = nw.feedforward(X.T)
 
         acc = accuracy(A[-1], Y.T)
-        print(f"accuracy = {acc}")
 
         assert acc > 0.9
     
