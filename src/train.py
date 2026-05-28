@@ -9,7 +9,7 @@ def train_mnist():
     nw = Network(layers)
 
     (X_train, Y_train, _, _) = get_mnist_data()
-    nw.gradient_descent(X_train.T, Y_train.T, batch_size=32, step=0.01, epochs=20, display=True)
+    nw.gradient_descent(X_train.T, Y_train.T, batch_size=32, step=0.01, epochs=30, display=True)
 
     return nw
 
