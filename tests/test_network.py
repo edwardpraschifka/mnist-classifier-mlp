@@ -78,7 +78,7 @@ class TestBackProp:
             assert np.allclose(gw, gwt)
 
         for gb, gbt in zip(grad_b, grad_b_torch):
-            assert np.array_equal(np.shape(gb), np.shape(gbt))
+            assert np.allclose(gb, gbt)
 
 class TestGradientDescent:
     

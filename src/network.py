@@ -98,7 +98,7 @@ class Network:
 
             # derivative of cost function with respect
             # to activations of output layer
-            dcda = 2 * (A[-1] - Y)
+            dcda = (A[-1] - Y)/(A[-1] * (1 - A[-1]))
 
             for i in range(self.size - 1, 0, -1):
                 # c = cost function
