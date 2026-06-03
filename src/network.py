@@ -1,7 +1,8 @@
 import numpy as np
 import pickle
 
-from .utils import Sigmoid, shuffle_and_batch
+from src.utils import shuffle_and_batch
+from src.activations import *
 
 class Network:
     def __init__(self, layers: np.ndarray, activation_fn = Sigmoid):

@@ -3,14 +3,6 @@ import math
 
 from tensorflow.keras.datasets import mnist
 
-class Sigmoid:
-
-    def forward(self, z):
-        return 1/(1+np.exp(-z))
-    
-    def derivative(self, z):
-        return self.forward(z) * (1 - self.forward(z))
-
 
 def shuffle_and_batch(X: np.ndarray, Y: np.ndarray, batch_size: int):
     """Splits data into batches, returns list of batches"""
