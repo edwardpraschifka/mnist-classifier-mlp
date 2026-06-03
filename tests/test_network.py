@@ -7,7 +7,7 @@ from src.network import Network
 from src.utils import accuracy, get_mnist_data
 from tests.test_cost_fns import backprop_torch
 from tests.utils import feedforward_torch
-from src.cost_functions import QuadraticCost
+from src.cost_functions import QuadraticCost, CrossEntropyCost
 
 class TestConstructor:
 
@@ -59,30 +59,34 @@ class TestBackProp:
 
     def test_output(self):
         """Test accuracy of backprop method with
-        with quadratic loss function"""
+        with each cost function"""
 
         layers = [20,50,40,30,20,10]
-        nw = Network(layers)
+        cost_functions = [QuadraticCost, CrossEntropyCost]
 
-        # 1000 training examples
-        X = np.random.rand(20,1000)
-        Y = np.random.rand(10,1000)
+        for cost_fn in cost_functions:
+            nw = Network(layers, cost_fn=cost_fn)
 
-        nw.weights = [np.random.rand(layers[i],layers[i-1]) for i in range(1, nw.size)]
-        nw.biases = [np.random.rand(layers[i],1) for i in range(1, nw.size)]
+            # 1000 training examples
+            X = np.random.rand(20,1000)
+            Y = np.random.rand(10,1000)
 
-        # compute grad_w and grad_b using our function
-        (grad_w, grad_b) = nw.backprop(X,Y)
-        
-        # test against grad_w and grad_b 
-        # computed using pytorch
-        (grad_w_torch,grad_b_torch) = backprop_torch(X, Y, nw, QuadraticCost)   
+            nw.weights = [np.random.rand(layers[i],layers[i-1]) for i in range(1, nw.size)]
+            nw.biases = [np.random.rand(layers[i],1) for i in range(1, nw.size)]
 
-        for gw, gwt in zip(grad_w, grad_w_torch):
-            assert np.allclose(gw, gwt)
+            # compute grad_w and grad_b using our function
+            (grad_w, grad_b) = nw.backprop(X,Y)
+            
+            # test against grad_w and grad_b 
+            # computed using pytorch
+            (grad_w_torch,grad_b_torch) = backprop_torch(X, Y, nw, cost_fn)   
 
-        for gb, gbt in zip(grad_b, grad_b_torch):
-            assert np.allclose(gb, gbt)
+            for gw, gwt in zip(grad_w, grad_w_torch):
+                assert np.allclose(gw, gwt)
+
+            for gb, gbt in zip(grad_b, grad_b_torch):
+                assert np.allclose(gb, gbt)
+    
 
 class TestGradientDescent:
     

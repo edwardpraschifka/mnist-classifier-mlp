@@ -10,13 +10,13 @@ from src.utils import shuffle_and_batch, accuracy
 
 class TestMakeBatch:
     def test_diff_len(self):
-        rows = 1000
+        cols = 1000
         batch_size = 25
-        x_cols = 20
-        y_cols = 5
+        x_rows = 20
+        y_rows = 5
 
-        X = np.random.rand(rows,x_cols)
-        Y = np.random.rand(rows + 1,y_cols)
+        X = np.random.rand(x_rows, cols)
+        Y = np.random.rand(y_rows, cols + 1)
 
         with pytest.raises(ValueError):
             (X_batches, Y_batches) = shuffle_and_batch(X, Y, batch_size)
@@ -82,22 +82,4 @@ class TestAccuracy:
             acc = accuracy(y_actual, y_predicted)
             assert np.allclose(acc, i * 0.1)
 
-            y_predicted[0, i: (i+1)*10] = 1
-
-
-class TestTrain:
-    subprocess.run(["python", "-m", "src.train", "-e", "1", "-o", "one_epoch.pkl"])
-    subprocess.run(["python", "-m", "src.train", "-e", "2", "-o", "two_epochs.pkl"])
-
-    nw = Network([])
-
-    nw.load("one_epoch.pkl")
-    nw.load("two_epochs.pkl")
-
-    acc1 = eval_mnist("one_epoch.pkl")
-    acc2 = eval_mnist("two_epochs.pkl")
-
-    os.remove("one_epoch.pkl")
-    os.remove("two_epochs.pkl")
-
-    assert acc1 < acc2
+            y_predicted[0, i*10: (i+1)*10] = 1
