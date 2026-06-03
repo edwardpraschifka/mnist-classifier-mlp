@@ -4,18 +4,20 @@ import math
 import os
 
 from src.network import Network
-from src.utils import sigmoid, shuffle_and_batch, accuracy
+from src.utils import Sigmoid, shuffle_and_batch, accuracy
 
 class TestSigmoid:
     def test_output_int(self):
         z = 2
-        out = sigmoid(z)
+        sig = Sigmoid()
+        out = sig.forward(z)
 
         assert round(out,2) == 0.88
     
     def test_output_vec(self):
         z = np.array([1,2,3])
-        out = sigmoid(z)
+        sig = Sigmoid()
+        out = sig.forward(z)
 
         expected_out = np.array([0.73, 0.88, 0.95])
 

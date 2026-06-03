@@ -1,10 +1,10 @@
 import numpy as np
 import pickle
 
-from .utils import sigmoid, shuffle_and_batch
+from .utils import Sigmoid, shuffle_and_batch
 
 class Network:
-    def __init__(self, layers: np.ndarray):
+    def __init__(self, layers: np.ndarray, activation_fn = Sigmoid):
         """Creates a new network, where layer i has layers[i] nodes"""
     
         self.layers = layers
@@ -13,6 +13,9 @@ class Network:
         # size of weights and biases are both size(layers) - 1
         self.weights = [np.random.randn(layers[i], layers[i-1]) * np.sqrt(1/layers[i-1]) for i in range(1, self.size)]
         self.biases = [np.zeros((layers[i], 1)) for i in range(1, self.size)]
+
+        self._activation_fn = activation_fn()
+             
     
     def save(self, filename):
         """Saves network to file"""
@@ -79,7 +82,7 @@ class Network:
 
         for i in range(1, self.size):
             Z[i] = (self.weights[i-1] @ A[i-1]) + self.biases[i-1]
-            A[i] = sigmoid(Z[i])
+            A[i] = self._activation_fn.forward(Z[i])
         
         return (Z,A)
     
