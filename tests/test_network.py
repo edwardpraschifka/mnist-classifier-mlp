@@ -5,7 +5,9 @@ import os
 
 from src.network import Network
 from src.utils import accuracy, get_mnist_data
-from tests.utils import backprop_torch, feedforward_torch
+from tests.test_cost_fns import backprop_torch
+from tests.utils import feedforward_torch
+from src.cost_functions import QuadraticCost
 
 class TestConstructor:
 
@@ -56,7 +58,8 @@ class TestFeedForward:
 class TestBackProp:
 
     def test_output(self):
-        """Test accuracy of backprop method"""
+        """Test accuracy of backprop method with
+        with quadratic loss function"""
 
         layers = [20,50,40,30,20,10]
         nw = Network(layers)
@@ -73,7 +76,7 @@ class TestBackProp:
         
         # test against grad_w and grad_b 
         # computed using pytorch
-        (grad_w_torch,grad_b_torch) = backprop_torch(X, Y, nw)   
+        (grad_w_torch,grad_b_torch) = backprop_torch(X, Y, nw, QuadraticCost)   
 
         for gw, gwt in zip(grad_w, grad_w_torch):
             assert np.allclose(gw, gwt)

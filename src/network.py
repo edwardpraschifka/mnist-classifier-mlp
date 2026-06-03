@@ -3,9 +3,10 @@ import pickle
 
 from src.utils import shuffle_and_batch
 from src.activations import *
+from src.cost_functions import *
 
 class Network:
-    def __init__(self, layers: np.ndarray, activation_fn = Sigmoid):
+    def __init__(self, layers: np.ndarray, activation_fn = Sigmoid, cost_fn = QuadraticCost):
         """Creates a new network, where layer i has layers[i] nodes"""
     
         self.layers = layers
@@ -16,6 +17,7 @@ class Network:
         self.biases = [np.zeros((layers[i], 1)) for i in range(1, self.size)]
 
         self._activation_fn = activation_fn()
+        self._cost_fn = cost_fn()
              
     
     def save(self, filename: str):
@@ -102,7 +104,7 @@ class Network:
 
             # derivative of cost function with respect
             # to activations of output layer
-            dcda = (A[-1] - Y)/(A[-1] * (1 - A[-1]))
+            dcda = self._cost_fn.derivative(A[-1], Y)
 
             for i in range(self.size - 1, 0, -1):
                 # c = cost function
