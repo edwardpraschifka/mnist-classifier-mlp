@@ -18,7 +18,7 @@ class Network:
         self._activation_fn = activation_fn()
              
     
-    def save(self, filename):
+    def save(self, filename: str):
         """Saves network to file"""
 
         with open(filename, 'wb') as f:

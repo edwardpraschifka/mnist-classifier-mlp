@@ -1,9 +1,11 @@
+import subprocess
+import os
 import pytest
 import numpy as np
 import math
-import os
 
 from src.network import Network
+from src.main import eval_mnist
 from src.utils import shuffle_and_batch, accuracy
 
 class TestMakeBatch:
@@ -83,19 +85,19 @@ class TestAccuracy:
             y_predicted[0, i: (i+1)*10] = 1
 
 
-class TestReadWrite:
-    def test_load(self):
-        layers = [3,4,2]
-        layers_2 = [2,4,3]
+class TestTrain:
+    subprocess.run(["python", "-m", "src.train", "-e", "1", "-o", "one_epoch.pkl"])
+    subprocess.run(["python", "-m", "src.train", "-e", "2", "-o", "two_epochs.pkl"])
 
-        nw = Network(layers)
-        nw_2 = Network(layers_2)
+    nw = Network([])
 
-        nw.save("test_network.pkl")
-        nw_2.load("test_network.pkl")
-        os.remove("test_network.pkl")
+    nw.load("one_epoch.pkl")
+    nw.load("two_epochs.pkl")
 
-        np.array_equal(nw_2.layers, nw.layers)
-        np.array_equal(nw_2.size, nw.size)
-        np.array_equal(nw_2.weights, nw.weights)
-        np.array_equal(nw_2.biases, nw.biases)
+    acc1 = eval_mnist("one_epoch.pkl")
+    acc2 = eval_mnist("two_epochs.pkl")
+
+    os.remove("one_epoch.pkl")
+    os.remove("two_epochs.pkl")
+
+    assert acc1 < acc2
