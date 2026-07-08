@@ -6,7 +6,7 @@ from src.activations import *
 from src.cost_functions import *
 
 class Network:
-    def __init__(self, layers: np.ndarray, activation_fn = Sigmoid, cost_fn = QuadraticCost):
+    def __init__(self, layers: np.ndarray, activation_fn = Sigmoid, cost_fn = CrossEntropyCost):
         """Creates a new network, where layer i has layers[i] nodes"""
     
         self.layers = layers

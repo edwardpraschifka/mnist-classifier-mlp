@@ -33,7 +33,6 @@ python -m src.train [options]
 | `-l` | float | `0.01` | Learning rate. Controls how large each gradient step is. Too high causes divergence; too low causes slow convergence. |
 | `-e` | int | `30` | Number of training epochs (full passes over the training set). |
 | `-a` | int | `0` | Activation function. See options below. |
-| `-c` | int | `0` | Cost function. See options below. |
 | `-o` | str | `network.pkl` | Output file path where the trained network is saved. |
 
 **Activation function options (`-a`)**
@@ -42,18 +41,12 @@ python -m src.train [options]
 |-------|----------|-------|
 | `0` | Sigmoid | Default. Squashes activations to (0, 1). |
 
-**Cost function options (`-c`)**
-
-| Value | Function | Notes |
-|-------|----------|-------|
-| `0` | Quadratic | Default. Mean squared error — straightforward but can learn slowly near saturation. |
-| `1` | Cross-Entropy | Generally faster convergence for classification tasks. |
 
 **Example**
 
 ```bash
-# Train for 50 epochs with cross-entropy loss, learning rate 0.001, save to my_model.pkl
-python -m src.train -e 50 -c 1 -lr 0.001 -o my_model.pkl
+# Train for 50 epochs with learning rate 0.001, save to my_model.pkl
+python -m src.train -e 50 -lr 0.001 -o my_model.pkl
 ```
 
 ---
@@ -92,7 +85,7 @@ src/
   test.py           # Evaluation script
   network.py        # Network class (feedforward, backprop, gradient descent)
   activations.py    # Activation functions (Sigmoid)
-  cost_functions.py # Cost functions (Quadratic, CrossEntropy)
+  cost_functions.py # Cost functions (CrossEntropy)
   utils.py          # Data loading and helper utilities
 
 tests/              # Pytest test suite

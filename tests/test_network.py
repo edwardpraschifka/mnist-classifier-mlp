@@ -7,7 +7,7 @@ from src.activations import Sigmoid
 from src.network import Network
 from src.utils import accuracy, get_mnist_data
 from tests.utils import feedforward_torch, backprop_torch
-from src.cost_functions import QuadraticCost, CrossEntropyCost
+from src.cost_functions import CrossEntropyCost
 
 
 class TestSigmoid:
@@ -80,7 +80,7 @@ class TestBackProp:
         with each cost function"""
 
         layers = [20,50,40,30,20,10]
-        cost_functions = [QuadraticCost, CrossEntropyCost]
+        cost_functions = [CrossEntropyCost]
 
         for cost_fn in cost_functions:
             nw = Network(layers, cost_fn=cost_fn)
